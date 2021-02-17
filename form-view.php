@@ -22,11 +22,13 @@
             </li>
         </ul>
     </nav>
-    <form method="post">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="email">E-mail:</label>
-                <input type="text" id="email" name="email" class="form-control"/>
+                <input type="text" id="email" name="email" class="form-control"
+                       value="<?php echo isset($_POST["email"]) ? $email : (isset($_SESSION['email']) ? $_SESSION['email'] : ''); ?>"/>
+                <span>* <?php echo $errors['emailErr'] ?></span>
             </div>
             <div></div>
         </div>
@@ -37,39 +39,47 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="street">Street:</label>
-                    <input type="text" name="street" id="street" class="form-control">
+                    <input type="text" name="street" id="street" class="form-control"
+                           value="<?php echo isset($_POST['street']) ? $street : (isset($_SESSION['street']) ? $_SESSION['street'] : ''); ?>">
+                    <span>* <?php echo $errors['streetErr'] ?></span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="streetnumber">Street number:</label>
-                    <input type="text" id="streetnumber" name="streetnumber" class="form-control">
+                    <input type="text" id="streetnumber" name="streetnumber" class="form-control"
+                           value="<?php echo isset($_POST['streetnumber']) ? $streetnumber : (isset($_SESSION['streetnumber']) ? $_SESSION['streetnumber'] : ''); ?>">
+                    <span>* <?php echo $errors['streetNumberErr'] ?></span>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="city">City:</label>
-                    <input type="text" id="city" name="city" class="form-control">
+                    <input type="text" id="city" name="city" class="form-control"
+                           value="<?php echo isset($_POST['city']) ? $city : (isset($_SESSION['city']) ? $_SESSION['city'] : ''); ?>">
+                    <span>* <?php echo $errors['cityErr'] ?></span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="zipcode">Zipcode</label>
-                    <input type="text" id="zipcode" name="zipcode" class="form-control">
+                    <input type="text" id="zipcode" name="zipcode" class="form-control"
+                           value="<?php echo isset($_POST['zipcode']) ? $zipcode : (isset($_SESSION['zipcode']) ? $_SESSION['zipcode'] : ''); ?>">
+                    <span>* <?php echo $errors['zipCodeErr'] ?></span>
                 </div>
             </div>
         </fieldset>
-
         <fieldset>
             <legend>Products</legend>
-            <?php foreach ($products AS $i => $product): ?>
+            <?php foreach ($products as $i => $product): ?>
                 <label>
-                    <input type="checkbox" value="1" name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?> -
-                    &euro; <?php echo number_format($product['price'], 2) ?></label><br />
+                    <input type="checkbox" value="1" name="products[<?php echo $i ?>]"/> <?php echo $product['name'] ?>
+                    -
+                    &euro; <?php echo number_format($product['price'], 2) ?></label><br/>
             <?php endforeach; ?>
         </fieldset>
-        
+
         <label>
-            <input type="checkbox" name="express_delivery" value="5" /> 
-            Express delivery (+ 5 EUR) 
+            <input type="checkbox" name="express_delivery" value="5"/>
+            Express delivery (+ 5 EUR)
         </label>
-            
+
         <button type="submit" class="btn btn-primary">Order!</button>
     </form>
 
