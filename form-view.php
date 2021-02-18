@@ -22,13 +22,13 @@
             </li>
         </ul>
     </nav>
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="email">E-mail:</label>
                 <input type="text" id="email" name="email" class="form-control"
-                       value="<?php echo isset($_POST["email"]) ? $email : (isset($_SESSION['email']) ? $_SESSION['email'] : ''); ?>"/>
-                <span>* <?php echo $errors['emailErr'] ?></span>
+                       value="<?php echo isset($_POST["email"]) ? $userInfo['email'] : (isset($_SESSION['email']) ? $_SESSION['email'] : ''); ?>"/>
+                <span style='color: red'> <?php echo $errors['emailErr'] ?></span>
             </div>
             <div></div>
         </div>
@@ -40,28 +40,28 @@
                 <div class="form-group col-md-6">
                     <label for="street">Street:</label>
                     <input type="text" name="street" id="street" class="form-control"
-                           value="<?php echo isset($_POST['street']) ? $street : (isset($_SESSION['street']) ? $_SESSION['street'] : ''); ?>">
-                    <span>* <?php echo $errors['streetErr'] ?></span>
+                           value="<?php echo isset($_POST['street']) ? $userInfo['street'] : (isset($_SESSION['street']) ? $_SESSION['street'] : ''); ?>">
+                    <span style='color: red'> <?php echo $errors['streetErr'] ?></span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="streetnumber">Street number:</label>
                     <input type="text" id="streetnumber" name="streetnumber" class="form-control"
-                           value="<?php echo isset($_POST['streetnumber']) ? $streetnumber : (isset($_SESSION['streetnumber']) ? $_SESSION['streetnumber'] : ''); ?>">
-                    <span>* <?php echo $errors['streetNumberErr'] ?></span>
+                           value="<?php echo isset($_POST['streetnumber']) ? $userInfo['streetnumber'] : (isset($_SESSION['streetnumber']) ? $_SESSION['streetnumber'] : ''); ?>">
+                    <span style='color: red'> <?php echo $errors['streetNumberErr'] ?></span>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="city">City:</label>
                     <input type="text" id="city" name="city" class="form-control"
-                           value="<?php echo isset($_POST['city']) ? $city : (isset($_SESSION['city']) ? $_SESSION['city'] : ''); ?>">
-                    <span>* <?php echo $errors['cityErr'] ?></span>
+                           value="<?php echo isset($_POST['city']) ? $userInfo['city'] : (isset($_SESSION['city']) ? $_SESSION['city'] : ''); ?>">
+                    <span style='color: red'> <?php echo $errors['cityErr'] ?></span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="zipcode">Zipcode</label>
                     <input type="text" id="zipcode" name="zipcode" class="form-control"
-                           value="<?php echo isset($_POST['zipcode']) ? $zipcode : (isset($_SESSION['zipcode']) ? $_SESSION['zipcode'] : ''); ?>">
-                    <span>* <?php echo $errors['zipCodeErr'] ?></span>
+                           value="<?php echo isset($_POST['zipcode']) ? $userInfo['zipcode'] : (isset($_SESSION['zipcode']) ? $_SESSION['zipcode'] : ''); ?>">
+                    <span style='color: red'> <?php echo $errors['zipCodeErr'] ?></span>
                 </div>
             </div>
         </fieldset>
@@ -79,7 +79,7 @@
             <input type="checkbox" name="express_delivery" value="5"/>
             Express delivery (+ 5 EUR)
         </label>
-
+        <input type="hidden" name="food" value="<?php echo $whatFood ?>">
         <button type="submit" class="btn btn-primary">Order!</button>
     </form>
 
