@@ -28,6 +28,19 @@ if (!isset($_GET['food']) && !isset($_POST['food']) || isset($_GET['food']) && $
         ['name' => 'Club Salmon', 'price' => 5]
     ];
     $whatFood = 1;
+} elseif ((isset($_POST['food']) && $_POST['food'] == 2) || (isset($_GET['food']) && $_GET['food'] == 2)){
+    $products = [
+        ['name' => 'Club Ham', 'price' => 3.20],
+        ['name' => 'Club Cheese', 'price' => 3],
+        ['name' => 'Club Cheese & Ham', 'price' => 4],
+        ['name' => 'Club Chicken', 'price' => 4],
+        ['name' => 'Club Salmon', 'price' => 5],
+        ['name' => 'Cola', 'price' => 2],
+        ['name' => 'Fanta', 'price' => 2],
+        ['name' => 'Sprite', 'price' => 2],
+        ['name' => 'Ice-tea', 'price' => 3],
+    ];
+    $whatFood = 2;
 } elseif ((isset($_POST['food']) && $_POST['food'] == 0) || $_GET['food'] == 0) {
     $products = [
         ['name' => 'Cola', 'price' => 2],
@@ -72,64 +85,6 @@ $orderPrice = 0;
     $data = htmlspecialchars($data);
     return $data;
 }
-function check_mail(){
-    if (empty($_POST['email'])) {
-        $errors['emailErr'] = ERROR_MSG_1;
-    } elseif (!filter_var(test_input($_POST['email']), FILTER_VALIDATE_EMAIL)) {
-        $errors['emailErr'] = ERROR_MSG_2."E-mail";
-    } else {
-        $userInfo['email'] = filter_var(test_input($_POST['email']), FILTER_VALIDATE_EMAIL);
-        $_SESSION['email'] = $userInfo['email'];
-        $errors['emailErr'] = "";
-    }
-}
-function check_street(){
-    if (empty($_POST['street'])) {
-        $errors['streetErr'] = ERROR_MSG_1;
-    } else {
-        $userInfo['street'] = test_input($_POST['street']);
-        $_SESSION['street'] = $userInfo['street'];
-        $errors['streetErr'] = "";
-    }
-}
-function check_streetnumber(){
-    if (empty($_POST['streetnumber'])) {
-        $errors['streetNumberErr'] = ERROR_MSG_1;
-    } elseif (!is_numeric(test_input($_POST['streetnumber']))) {
-        $errors['streetNumberErr'] = ERROR_MSG_2."number";
-    } else {
-        $userInfo['streetnumber'] = test_input($_POST['streetnumber']);
-        $_SESSION['streetnumber'] = $userInfo['streetnumber'];
-        $errors['streetNumberErr'] = "";
-    }
-}
-function check_city(){
-    if (empty($_POST['city'])) {
-        $errors['cityErr'] = ERROR_MSG_1;
-    } else{
-        $userInfo['city'] = test_input($_POST['city']);
-        $_SESSION['city'] = $userInfo['city'];
-        $errors['cityErr'] = "";
-    }
-}
-function check_zipcode(){
-    if (empty($_POST['zipcode'])) {
-        $errors['zipCodeErr'] = ERROR_MSG_1;
-    } elseif (!is_numeric(test_input($_POST['zipcode']))) {
-        $errors['zipCodeErr'] = ERROR_MSG_2."zipcode";
-    } else {
-        $userInfo['zipcode'] = test_input($_POST['zipcode']);
-        $_SESSION['zipcode'] = $userInfo['zipcode'];
-        $errors['zipCodeErr'] = "";
-    }
-}
-function check_all_input(){
-    check_mail();
-    check_street();
-    check_streetnumber();
-    check_city();
-    check_zipcode();
-}
 
 //check if the cookie totalRev exists
 // if not make one starting at 0
@@ -142,39 +97,82 @@ if (!isset($_COOKIE['totalRev'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    check_all_input();
-    // check for express delivery
-    if(!empty($_POST['express_delivery'])){
-        $totalValue += (float)$_POST['express_delivery'];
-        $express = "";
+    if (empty($_POST['email'])) {
+        $errors['emailErr'] = ERROR_MSG_1;
+    } elseif (!filter_var(test_input($_POST['email']), FILTER_VALIDATE_EMAIL)) {
+        $errors['emailErr'] = ERROR_MSG_2."E-mail";
+    } else {
+        $userInfo['email'] = filter_var(test_input($_POST['email']), FILTER_VALIDATE_EMAIL);
+        $_SESSION['email'] = $userInfo['email'];
+        $errors['emailErr'] = "";
     }
+    if (empty($_POST['street'])) {
+        $errors['streetErr'] = ERROR_MSG_1;
+    } else {
+        $userInfo['street'] = test_input($_POST['street']);
+        $_SESSION['street'] = $userInfo['street'];
+        $errors['streetErr'] = "";
+    }
+    if (empty($_POST['streetnumber'])) {
+        $errors['streetNumberErr'] = ERROR_MSG_1;
+    } elseif (!is_numeric(test_input($_POST['streetnumber']))) {
+        $errors['streetNumberErr'] = ERROR_MSG_2."number";
+    } else {
+        $userInfo['streetnumber'] = test_input($_POST['streetnumber']);
+        $_SESSION['streetnumber'] = $userInfo['streetnumber'];
+        $errors['streetNumberErr'] = "";
+    }
+    if (empty($_POST['city'])) {
+        $errors['cityErr'] = ERROR_MSG_1;
+    } else{
+        $userInfo['city'] = test_input($_POST['city']);
+        $_SESSION['city'] = $userInfo['city'];
+        $errors['cityErr'] = "";
+    }
+    if (empty($_POST['zipcode'])) {
+        $errors['zipCodeErr'] = ERROR_MSG_1;
+    } elseif (!is_numeric(test_input($_POST['zipcode']))) {
+        $errors['zipCodeErr'] = ERROR_MSG_2."zipcode";
+    } else {
+        $userInfo['zipcode'] = test_input($_POST['zipcode']);
+        $_SESSION['zipcode'] = $userInfo['zipcode'];
+        $errors['zipCodeErr'] = "";
+    }
+    // error handling
+    $e = 0;
+    foreach ($errors as $error) {
+        if ($error !== "") {
+            $e += 1;
+        }
+    }
+
     // add up the order total
     for ($i = 0; $i <= count($products); $i++) {
-        if (!empty($_POST['products'][$i])) {
+        if (!empty($_POST['products'][$i]) && $e === 0) {
             $totalValue += (float)$products[$i]['price']*(int)$_POST['products'][$i];
             $orderDetails .= (int)$_POST['products'][$i].' '. $products[$i]['name'].", ";
             $orderPrice += (float)$products[$i]['price']*(int)$_POST['products'][$i];
+            // check for express delivery
+            if(!empty($_POST['express_delivery'])){
+                $express = "all good";
+            }
         }
     }
+    whatIsHappening();
     //figure out the delivery time
-    if(isset($express)){
+    if(!empty($express)){
+        $totalValue += (float)$_POST['express_delivery'];
         $deliveryTime = date("H:i",strtotime(EXPRESS_D_TIME));
     }else{
         $deliveryTime = date("H:i",strtotime(NORMAL_D_TIME));
     }
-    // error handling
-    $i = 0;
-    foreach ($errors as $error) {
-        if ($error !== "") {
-            $i += 1;
-        }
-    }
-    if ($i === 0) {
+    if ($e === 0) {
         echo "<div style='background-color: aquamarine; color: darkgreen'><p class='text-center'>Your Order has been placed! And will arrive at: $deliveryTime!</p></div>";
-    } elseif ($i > 0) {
+    } elseif ($e > 0) {
         echo "<div style='background-color: indianred; color: whitesmoke'><p class='text-center'>Please check your information!</p></div>";
     }
 }
+$express="";
 // the mail part
 /*if (isset($_POST['products'])){
     $subject = "Your order at the Personal Ham Processors!";

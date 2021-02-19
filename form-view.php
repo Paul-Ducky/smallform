@@ -20,6 +20,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="?food=0">Order drinks</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="?food=2">Order food & drinks</a>
+            </li>
         </ul>
     </nav>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
