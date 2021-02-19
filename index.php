@@ -151,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // add up the order total
     for ($i = 0; $i <= count($products); $i++) {
         if (!empty($_POST['products'][$i])) {
-            $totalValue += (float)$products[$i]['price'];
-            $orderDetails .=  $products[$i]['name'].", ";
-            $orderPrice += (float)$products[$i]['price'];
+            $totalValue += (float)$products[$i]['price']*(int)$_POST['products'][$i];
+            $orderDetails .= (int)$_POST['products'][$i].' '. $products[$i]['name'].", ";
+            $orderPrice += (float)$products[$i]['price']*(int)$_POST['products'][$i];
         }
     }
     //figure out the delivery time
